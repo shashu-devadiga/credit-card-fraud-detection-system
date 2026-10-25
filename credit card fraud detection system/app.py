@@ -34,8 +34,7 @@ def download_model():
     downloaded_file = gdown.download(
         id=GOOGLE_DRIVE_FILE_ID,
         output=MODEL_PATH,
-        quiet=False,
-        fuzzy=True
+        quiet=False
     )
 
     if (

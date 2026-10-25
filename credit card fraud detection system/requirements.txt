@@ -6,3 +6,4 @@ joblib
 Flask
 Flask-Cors
 gunicorn
+requests

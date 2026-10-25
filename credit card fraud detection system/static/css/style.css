@@ -1,0 +1,352 @@
+/* ================================
+   GLOBAL
+================================ */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f8fc;
+    color: #172b4d;
+    min-height: 100vh;
+}
+
+
+/* ================================
+   HEADER
+================================ */
+
+.header {
+    width: 100%;
+    background: #173b70;
+    color: white;
+    padding: 28px 20px 30px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 42px;
+    font-weight: 700;
+    margin-bottom: 14px;
+    letter-spacing: -0.5px;
+}
+
+.header p {
+    font-size: 18px;
+    color: #dce8f8;
+    font-weight: 400;
+}
+
+
+/* ================================
+   MAIN CONTAINER
+================================ */
+
+.container {
+    width: 82%;
+    max-width: 1100px;
+    margin: 24px auto 40px;
+}
+
+
+/* ================================
+   CARD
+================================ */
+
+.card {
+    background: #ffffff;
+    border: 1px solid #d6e4f3;
+    border-radius: 8px;
+    padding: 25px 28px 27px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(31, 74, 125, 0.06);
+}
+
+.card h2 {
+    font-size: 25px;
+    color: #172b4d;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+
+/* ================================
+   FORM GRID
+================================ */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 30px;
+    row-gap: 19px;
+}
+
+
+/* ================================
+   FORM GROUP
+================================ */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full {
+    grid-column: 1 / -1;
+}
+
+
+/* ================================
+   LABEL
+================================ */
+
+.form-group label {
+    font-size: 15px;
+    font-weight: 600;
+    color: #183b68;
+    margin-bottom: 8px;
+}
+
+
+/* ================================
+   INPUTS + SELECT
+================================ */
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    height: 43px;
+    padding: 0 15px;
+    border: 1px solid #cbdced;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #506a8c;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+
+/* Placeholder */
+
+.form-group input::placeholder {
+    color: #8aa2c1;
+}
+
+
+/* Select */
+
+.form-group select {
+    cursor: pointer;
+    appearance: auto;
+}
+
+
+/* Focus */
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #2875dc;
+    box-shadow: 0 0 0 2px rgba(40, 117, 220, 0.12);
+}
+
+
+/* ================================
+   DATE & TIME
+================================ */
+
+.form-group input[type="datetime-local"] {
+    color: #6d84a2;
+    cursor: pointer;
+}
+
+
+/* ================================
+   CHECK BUTTON
+================================ */
+
+.check-btn {
+    width: 100%;
+    height: 50px;
+    margin-top: 21px;
+
+    border: none;
+    border-radius: 7px;
+
+    background: #2167d5;
+    color: white;
+
+    font-size: 18px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease,
+                transform 0.1s ease,
+                box-shadow 0.2s ease;
+}
+
+.check-btn:hover {
+    background: #185bc4;
+    box-shadow: 0 4px 10px rgba(33, 103, 213, 0.25);
+}
+
+.check-btn:active {
+    transform: translateY(1px);
+}
+
+
+/* ================================
+   RESULT SECTION
+================================ */
+
+.result-box {
+    width: 100%;
+    min-height: 164px;
+
+    background: #f5f8fc;
+    border-radius: 9px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    padding: 25px;
+}
+
+/* ================================
+   RESULT SECTION
+================================ */
+
+.result-box {
+    width: 100%;
+    min-height: 180px;
+    background: #f7faff;
+    border: 1px solid #dbe7f5;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    padding: 28px 20px;
+}
+
+
+/* ================================
+   RESULT ICON
+================================ */
+
+.result-icon {
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 14px;
+
+    border: 3px solid #7086a3;
+    border-radius: 50%;
+
+    color: #7086a3;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 27px;
+    font-weight: bold;
+}
+
+
+/* ================================
+   RESULT TEXT
+================================ */
+
+.result-text {
+    color: #506a8c;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+.result-text strong {
+    display: inline-block;
+    margin-bottom: 4px;
+
+    color: #172b4d;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.result-text b {
+    color: #405c7f;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+
+@media (max-width: 800px) {
+
+    .container {
+        width: 92%;
+    }
+
+    .header h1 {
+        font-size: 32px;
+    }
+
+    .header p {
+        font-size: 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        column-gap: 0;
+    }
+
+    .form-group.full {
+        grid-column: auto;
+    }
+}
+
+
+@media (max-width: 500px) {
+
+    .header {
+        padding: 24px 15px;
+    }
+
+    .header h1 {
+        font-size: 27px;
+    }
+
+    .header p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .container {
+        width: 94%;
+        margin-top: 15px;
+    }
+
+    .card {
+        padding: 20px 17px;
+    }
+
+    .card h2 {
+        font-size: 22px;
+    }
+
+    .check-btn {
+        font-size: 16px;
+    }
+}

@@ -3,107 +3,23 @@ const form = document.querySelector("form");
 form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    // Get transaction details from the existing HTML form
-    const cardNumber = document.querySelector(
-        'input[name="card_number"]'
-    ).value.trim();
-
-    const amount = document.querySelector(
-        'input[name="amount"]'
-    ).value.trim();
-
-    const category = document.querySelector(
-        'select[name="category"]'
+    // Get form input values
+    const cardNumber = document.getElementById("cc_num").value;
+    const category = document.getElementById("category").value;
+    const amount = document.getElementById("amt").value;
+    const gender = document.getElementById("gender").value;
+    const state = document.getElementById("state").value;
+    const zip = document.getElementById("zip").value;
+    const customerLatitude = document.getElementById("lat").value;
+    const customerLongitude = document.getElementById("long").value;
+    const cityPopulation = document.getElementById("city_pop").value;
+    const merchantLatitude = document.getElementById("merch_lat").value;
+    const merchantLongitude = document.getElementById("merch_long").value;
+    const transactionDateTime = document.getElementById(
+        "trans_date_trans_time"
     ).value;
 
-    const gender = document.querySelector(
-        'select[name="Gender"]'
-    ).value;
-
-    const state = document.querySelector(
-        'select[name="State"]'
-    ).value;
-
-    const zip = document.querySelector(
-        'input[name="zip"]'
-    ).value.trim();
-
-    const cityPopulation = document.querySelector(
-        'input[name="city_population"]'
-    ).value.trim();
-
-    const customerLatitude = document.querySelector(
-        'input[name="customer_latitude"]'
-    ).value.trim();
-
-    const customerLongitude = document.querySelector(
-        'input[name="customer_longitude"]'
-    ).value.trim();
-
-    const merchantLatitude = document.querySelector(
-        'input[name="merchant_latitude"]'
-    ).value.trim();
-
-    const merchantLongitude = document.querySelector(
-        'input[name="merchant_longitude"]'
-    ).value.trim();
-
-    const transactionDateTime = document.querySelector(
-        'input[name="transaction_datetime"]'
-    ).value;
-
-    // Validate required fields
-    if (
-        !cardNumber ||
-        !amount ||
-        !category ||
-        !gender ||
-        !state ||
-        !zip ||
-        !cityPopulation ||
-        !customerLatitude ||
-        !customerLongitude ||
-        !merchantLatitude ||
-        !merchantLongitude ||
-        !transactionDateTime
-    ) {
-        alert("Please fill in all transaction details before checking.");
-        return;
-    }
-
-    // Validate card number
-    if (!/^\d{1,19}$/.test(cardNumber)) {
-        alert("Please enter a valid card number.");
-        return;
-    }
-
-    // Validate numeric inputs
-    const numericValues = [
-        amount,
-        zip,
-        cityPopulation,
-        customerLatitude,
-        customerLongitude,
-        merchantLatitude,
-        merchantLongitude
-    ];
-
-    if (!numericValues.every(value => Number.isFinite(Number(value)))) {
-        alert("Please enter valid numeric transaction details.");
-        return;
-    }
-
-    if (Number(amount) < 0 || Number(cityPopulation) < 0) {
-        alert("Amount and city population cannot be negative.");
-        return;
-    }
-
-    if (!/^\d+$/.test(zip)) {
-        alert("Please enter a valid ZIP code.");
-        return;
-    }
-
-    // Prepare data using the NEW model's expected feature names
+    // Prepare transaction data
     const transactionData = {
         cc_num: Number(cardNumber),
         category: category,
@@ -119,67 +35,62 @@ form.addEventListener("submit", async function (event) {
         trans_date_trans_time: transactionDateTime
     };
 
-    // Show a temporary status while waiting for prediction
-    const resultIcon = document.querySelector(".result-icon");
-    const resultText = document.querySelector(".result-text");
-    const submitButton = form.querySelector(
-        'button[type="submit"]'
-    );
+    // Get result display elements
+    const resultIcon = document.getElementById("result-icon");
+    const resultText = document.getElementById("result-text");
+    const submitButton = form.querySelector('button[type="submit"]');
 
+    // Display loading status
     resultIcon.textContent = "⏳";
-    resultText.textContent = "Checking transaction...";
-    submitButton.disabled = true;
+    resultText.textContent = "Analyzing transaction...";
+
+    if (submitButton) {
+        submitButton.disabled = true;
+    }
 
     try {
-        // Connect to the Flask prediction API
-        const response = await fetch(
-            "http://127.0.0.1:5000/predict",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(transactionData)
-            }
-        );
+        // Send the request to the deployed Flask application.
+        // Relative URL works locally and on Render.
+        const response = await fetch("/predict", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(transactionData)
+        });
 
+        // Read the server response
         const result = await response.json();
 
-        // Handle errors returned by Flask
+        // Handle unsuccessful responses
         if (!response.ok) {
             throw new Error(
                 result.error || "Unable to predict this transaction."
             );
         }
 
-        // Display the model's prediction
-        if (result.prediction === 1) {
-            resultIcon.textContent = "⚠️";
-            resultText.innerHTML = `
-                <strong>Fraudulent Transaction</strong>
-                <br>
-                This transaction has been identified as potentially fraudulent.
-            `;
-        } else if (result.prediction === 0) {
-            resultIcon.textContent = "✓";
-            resultText.innerHTML = `
-                <strong>Legitimate Transaction</strong>
-                <br>
-                This transaction appears to be legitimate.
-            `;
-        } else {
-            throw new Error("The server returned an unexpected prediction.");
-        }
+        // Display prediction
+        resultIcon.textContent = result.prediction === 1 ? "🚨" : "✅";
 
-        console.log("Prediction:", result);
+        resultText.textContent =
+            result.result ||
+            (result.prediction === 1
+                ? "Fraudulent Transaction Detected!"
+                : "Legitimate Transaction");
 
     } catch (error) {
-        resultIcon.textContent = "❌";
-        resultText.textContent = error.message;
-
         console.error("Prediction error:", error);
 
+        resultIcon.textContent = "❌";
+
+        resultText.textContent =
+            error.message === "Failed to fetch"
+                ? "Unable to connect to the prediction server. Please check your internet connection and try again."
+                : error.message || "Something went wrong. Please try again.";
+
     } finally {
-        submitButton.disabled = false;
+        if (submitButton) {
+            submitButton.disabled = false;
+        }
     }
 });
